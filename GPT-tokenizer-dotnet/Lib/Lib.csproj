@@ -1,20 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;net6.0;netcoreapp3.1;net461;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net461;netstandard2.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
-        <AssemblyName>AI.Dev.OpenAI.GPT</AssemblyName>
-        <RootNamespace>AI.Dev.OpenAI.GPT</RootNamespace>
+        <AssemblyName>Forge.OpenAI.Dev.OpenAI.GPT</AssemblyName>
+        <RootNamespace>Forge.OpenAI.Dev.OpenAI.GPT</RootNamespace>
         <Authors>Devis Lucato</Authors>
-        <PackageProjectUrl>https://github.com/dluc/openai-tools</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/JZO001/openai-tools</PackageProjectUrl>
         <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/dluc/openai-tools</RepositoryUrl>
+        <RepositoryUrl>https://github.com/JZO001/openai-tools</RepositoryUrl>
         <PackageTags>OpenAI GPT GPT3 Tokenizer Tokens AI</PackageTags>
         <Title>OpenAI GPT utils</Title>
         <Description>OpenAI GPT utils, e.g. GPT3 Tokenizer</Description>
         <Copyright>Devis Lucato</Copyright>
         <PackageVersion>1.0.2</PackageVersion>
+        <PackageId>$(AssemblyName)</PackageId>
+        <AssemblyVersion>1.0.2.0</AssemblyVersion>
+        <FileVersion>$(AssemblyVersion)</FileVersion>
+        <Version>$(AssemblyVersion)</Version>
+        <PackageReleaseNotes>
+            v1.0.2 - Supporting other framework types. Original repository: https://github.com/dluc/openai-tools
+        </PackageReleaseNotes>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\Forge.pfx</AssemblyOriginatorKeyFile>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,12 +35,8 @@
         <EmbeddedResource Include="Settings\vocab.bpe" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-      <PackageReference Include="System.Text.Json" Version="6.0.7" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-        <PackageReference Include="System.Text.Json" Version="6.0.7" />
+    <ItemGroup>
+        <PackageReference Include="System.Text.Json" Version="6.0.0" />
     </ItemGroup>
 
 </Project>

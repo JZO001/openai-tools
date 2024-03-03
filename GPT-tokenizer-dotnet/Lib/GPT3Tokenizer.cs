@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using AI.Dev.OpenAI.GPT.Settings;
+using Forge.OpenAI.Dev.OpenAI.GPT.Settings;
 
-namespace AI.Dev.OpenAI.GPT
+namespace Forge.OpenAI.Dev.OpenAI.GPT
 {
     public static class GPT3Tokenizer
     {
@@ -18,16 +18,16 @@ namespace AI.Dev.OpenAI.GPT
         public static List<int> Encode(string text)
         {
             if (string.IsNullOrEmpty(text)) return new List<int>();
-            Dictionary<int, char> byteEncoder = BytesToUnicode();
+            var byteEncoder = BytesToUnicode();
 
-            string pat = @"'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+";
-            MatchCollection matches = Regex.Matches(text, pat);
+            var pat = @"'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+";
+            var matches = Regex.Matches(text, pat);
 
             var bpeTokens = new List<int>();
             foreach (Match? match in matches)
             {
-                string token = new string(Encoding.UTF8.GetBytes(match!.Value).Select(x => byteEncoder[x]).ToArray());
-                List<int> newTokens = BytePairEncoding(token).Split(' ').Select(x => GPT3Settings.Encoder[x]).ToList();
+                var token = new string(Encoding.UTF8.GetBytes(match!.Value).Select(x => byteEncoder[x]).ToArray());
+                var newTokens = BytePairEncoding(token).Split(' ').Select(x => GPT3Settings.Encoder[x]).ToList();
                 bpeTokens.AddRange(newTokens);
             }
 
@@ -56,15 +56,15 @@ namespace AI.Dev.OpenAI.GPT
             // Note: no visible gain with this
             if (BYTES_TO_UNICODE_CACHE != null) return BYTES_TO_UNICODE_CACHE;
 
-            List<int> bytes = Enumerable.Range(Ord("!"), Ord("~") + 1 - Ord("!"))
+            var bytes = Enumerable.Range(Ord("!"), Ord("~") + 1 - Ord("!"))
                 .Concat(Enumerable.Range(Ord("¡"), Ord("¬") + 1 - Ord("¡")))
                 .Concat(Enumerable.Range(Ord("®"), Ord("ÿ") + 1 - Ord("®")))
                 .ToList();
 
-            List<char> chars = (from x in bytes select (char)x).ToList();
+            var chars = (from x in bytes select (char)x).ToList();
 
-            int n = 0;
-            for (int b = 0; b < 256; b++)
+            var n = 0;
+            for (var b = 0; b < 256; b++)
             {
                 if (bytes.Contains(b)) continue;
                 bytes.Add(b);
@@ -82,8 +82,8 @@ namespace AI.Dev.OpenAI.GPT
         {
             if (BPE_CACHE.ContainsKey(token)) return BPE_CACHE[token];
 
-            List<string> word = (from x in token.ToList() select x.ToString()).ToList();
-            List<Tuple<string, string>> pairs = GetPairs(word);
+            var word = (from x in token.ToList() select x.ToString()).ToList();
+            var pairs = GetPairs(word);
             if (pairs.Count == 0)
             {
                 BPE_CACHE.TryAdd(token, token);
@@ -93,11 +93,11 @@ namespace AI.Dev.OpenAI.GPT
             while (true)
             {
                 var minPairs = new SortedDictionary<long, Tuple<string, string>>();
-                foreach (Tuple<string, string> pair in pairs)
+                foreach (var pair in pairs)
                 {
                     if (GPT3Settings.BpeRanks.ContainsKey(pair))
                     {
-                        int rank = GPT3Settings.BpeRanks[pair];
+                        var rank = GPT3Settings.BpeRanks[pair];
                         minPairs[rank] = pair;
                     }
                     else
@@ -106,18 +106,18 @@ namespace AI.Dev.OpenAI.GPT
                     }
                 }
 
-                Tuple<string, string> biGram = minPairs[minPairs.Keys.Min()];
+                var biGram = minPairs[minPairs.Keys.Min()];
                 if (!GPT3Settings.BpeRanks.ContainsKey(biGram)) break;
 
-                string first = biGram.Item1;
-                string second = biGram.Item2;
+                var first = biGram.Item1;
+                var second = biGram.Item2;
 
                 var newWord = new List<string>();
-                int i = 0;
+                var i = 0;
 
                 while (i < word.Count)
                 {
-                    int j = word.IndexOf(first, i);
+                    var j = word.IndexOf(first, i);
 
                     if (j == -1)
                     {
@@ -130,7 +130,7 @@ namespace AI.Dev.OpenAI.GPT
                     newWord.AddRange(slice2);
                     i = j;
 
-                    if (word[i] == first && i < (word.Count - 1) && word[i + 1] == second)
+                    if (word[i] == first && i < word.Count - 1 && word[i + 1] == second)
                     {
                         newWord.Add($"{first}{second}");
                         i += 2;
@@ -147,7 +147,7 @@ namespace AI.Dev.OpenAI.GPT
                 pairs = GetPairs(word);
             }
 
-            string result = string.Join(" ", word);
+            var result = string.Join(" ", word);
             BPE_CACHE.TryAdd(token, result);
             return result;
         }
@@ -159,10 +159,10 @@ namespace AI.Dev.OpenAI.GPT
         {
             var result = new List<Tuple<string, string>>();
 
-            string prevChar = word[0];
-            for (int i = 1; i < word.Count; i++)
+            var prevChar = word[0];
+            for (var i = 1; i < word.Count; i++)
             {
-                string currentChar = word[i];
+                var currentChar = word[i];
                 result.Add(new Tuple<string, string>(prevChar, currentChar));
                 prevChar = currentChar;
             }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
-namespace AI.Dev.OpenAI.GPT.Settings
+namespace Forge.OpenAI.Dev.OpenAI.GPT.Settings
 {
     internal static class GPT3Settings
     {
@@ -18,12 +18,12 @@ namespace AI.Dev.OpenAI.GPT.Settings
 
         private static Dictionary<Tuple<string, string>, int> BuildBpeRanks()
         {
-            string[] lines = EmbeddedResource.Read("vocab.bpe").Split(new string[] { "\n" }, StringSplitOptions.None);
-            List<Tuple<string, string>> bpeMerges = new ArraySegment<string>(lines, 1, lines.Length - 1)
+            var lines = EmbeddedResource.Read("vocab.bpe").Split(new string[] { "\n" }, StringSplitOptions.None);
+            var bpeMerges = new ArraySegment<string>(lines, 1, lines.Length - 1)
                 .Where(x => x.Trim().Length > 0)
                 .Select(x =>
                 {
-                    string[] y = x.Split(' ');
+                    var y = x.Split(' ');
                     return new Tuple<string, string>(y[0], y[1]);
                 }).ToList();
             return DictZip(bpeMerges, Range(0, bpeMerges.Count));
@@ -31,7 +31,7 @@ namespace AI.Dev.OpenAI.GPT.Settings
 
         private static Dictionary<string, int> BuildEncoder()
         {
-            string json = EmbeddedResource.Read("encoder.json");
+            var json = EmbeddedResource.Read("encoder.json");
             var encoder = JsonSerializer.Deserialize<Dictionary<string, int>>(json, new JsonSerializerOptions());
             if (encoder == null) throw new NullReferenceException($"[{NAMESPACE}] encoder.json deserialization returned NULL");
             return encoder;
@@ -40,7 +40,7 @@ namespace AI.Dev.OpenAI.GPT.Settings
         private static Dictionary<Tuple<string, string>, int> DictZip(List<Tuple<string, string>> x, List<int> y)
         {
             var result = new Dictionary<Tuple<string, string>, int>();
-            for (int i = 0; i < x.Count; i++) result.Add(x[i], y[i]);
+            for (var i = 0; i < x.Count; i++) result.Add(x[i], y[i]);
             return result;
         }
 
