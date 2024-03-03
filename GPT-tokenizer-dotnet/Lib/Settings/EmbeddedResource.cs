@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Forge.OpenAI.Dev.OpenAI.GPT.Settings
+namespace Forge.OpenAI.GPT.Settings
 {
     internal static class EmbeddedResource
     {

@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Forge.OpenAI.Dev.OpenAI.GPT.Settings;
+using Forge.OpenAI.GPT.Settings;
 
-namespace Forge.OpenAI.Dev.OpenAI.GPT
+namespace Forge.OpenAI.GPT
 {
     public static class GPT3Tokenizer
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
-namespace Forge.OpenAI.Dev.OpenAI.GPT.Settings
+namespace Forge.OpenAI.GPT.Settings
 {
     internal static class GPT3Settings
     {
